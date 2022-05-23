@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "Wordcloud_Youtube"
+version = "0.1.0"
+description = ""
+authors = ["Guillaume Faguet <guillaume.faguet@protonmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+youtube-transcript-api = "^0.4.4"
+wordcloud = "^1.8.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.1.2"
+black = "^22.3.0"
+flake8 = "^4.0.1"
+coverage = "^6.4"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
