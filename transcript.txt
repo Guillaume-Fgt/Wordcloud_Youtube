@@ -1,535 +1,213 @@
-the most common use of functions in a
-piece of code is to group operations and
-then call that function one or more
-times from another place in the code but
-functions are way more flexible than
-that in python functions are objects of
-type callable you can define type
-aliases for them you can pass functions
-as arguments to other functions if you
-use a package like phone tools you can
-even call functions partially it's
-better than sliced bread and i don't
-even like sliced bread have you noticed
-that in whatever country you are the
-people living there think that their
-bread is better than in any other
-country
-it's really weird
-i mean i live in the netherlands so for
-us it doesn't really apply because our
-bread is actually better but if you live
-in one of those other countries so
-basically living in a lie how do you
-cope with that another thing we're
-really good at in the netherlands is
-writing software design guides for
-example this one aryancodes.com
-design guide it's totally free it
-contains the seven steps that i take
-whenever i design a new piece of
-software from scratch i'm sharing it
-with you so i hope it helps you to avoid
-some of the mistakes that i made in the
-past and while you're at it
-order some dutch bread or
-you know keep living in your bread
-fantasy world choice is yours
-ironcodes.com design guide and link is
-also in the description of this video
-today i'm going to show you a couple of
-not so common ways of using functions in
-your code as an example i'm going to use
-a trading system with different trading
-strategies so it's a bit like the
-stranger pattern but we're going to do
-some cool stuff with functions let's
-dive in
-so there's a trading strategy protocol
-class here that has a should buy and a
-should sell method and both of these in
-the protocol they're not implemented so
-they raise a not implemented error if
-you scroll down you see that we have an
-average trading strategy that looks at
-the last few prices
-and then checks whether it's below or
-above the average and then decides
-whether or not to buy based on that
-number and then we also have a min max
-trading strategy that looks at a minimum
-price and a maximum price if the price
-is below that minimum price then we
-should buy it if it's above a certain
-maximum price then we should start
-selling the asset that's the whole idea
-of these two strategies of course these
-strategies will never make you any money
-because the market is way more efficient
-than that so don't use this for real
-trading it's just meant as an example
-then we have a class trading bots that's
-a data class and it has an exchange and
-a trading strategy the exchange is
-something that i just built myself very
-simple it has one constant with some
-price data so it doesn't actually
-connect to an exchange and we have a
-method for getting particular market
-data that gets fake price data for us
-and then we have something that
-simulates buying and simulates selling
-so the trading bot has an exchange and
-it has a trading strategy which is an
-instance of well one of these classes
-average or min max and then there's a
-run method that gets a symbol
-the type of currency that you want to
-buy or sell that method does a few
-things it gets the price data from the
-exchange it determines whether we should
-buy or sell and then it's going to buy
-or sell a certain quantity of that
-symbol and otherwise that's going to
-print no action needed and then a simple
-main function that creates an exchange
-connects to exchange creates a trading
-strategy and then a trading bot and then
-runs it for bitcoin my favorite
-cryptocurrency i actually bought some
-bitcoin and ethereum again a while ago
-so bitcoin ethereum to the moon let's
-run this and see what happens
-so in this case it's going to sell 10
-satoshi probably in the bitcoin us
-dollar market but i can also change now
-the trading strategy to something else
-for example let's use the average
-trading strategy and then what's going
-to happen is we're actually going to buy
-something so these strategies they have
-different effect on the behavior of the
-trading mod which makes total sense
-right now this is a traditional
-implementation of the strategy pattern
-we have an abstract class or in this
-case a protocol class that defines the
-interface that has a methods or in this
-case two methods so it's not entirely
-traditional strategy pattern but it's
-pretty close then we have subclasses or
-classes that implement the protocol that
-have these two methods should buy and
-should sell and then there's another
-class that uses it so that's the
-traditional object oriented approach of
-doing this and because object oriented
-it relies heavily on classes if you're
-not too attached to using classes if you
-don't store state functions provide a
-great way to achieve the same effect as
-the strategy pattern in this example in
-general functions can replace or
-significantly simplify code that uses
-classes and object-oriented design
-patterns that doesn't mean that design
-patterns aren't needed anymore they're
-still useful but in many cases a
-functional approach might actually be
-much simpler so let's change this code
-to use functions instead of classes
-basically if you look at the signature
-of these methods each of them gets a
-bunch of prices and then returns a
-boolean value so in order to transform
-this example into using a more
-functional approach instead of all these
-classes we should perhaps define this
-function type before we start doing that
-job so what i'm going to do is create a
-trading
-strategy
-function which is going to be our
-function type and that's going to be a
-callable
-and the input is going to be the list of
-prices
-that's a list of integers
-and what it's going to return is a
-boolean value so this is basically what
-any of the trading strategy functions
-are going to look like so this class i'm
-going to delete because we're not going
-to use the class anymore and then we
-have our average trading strategy
-functions and we have the min max
-trading strategy functions and we should
-simply transform them into functions
-that follow this signature so let me
-also remove this class definition
-because we don't need that anymore and
-i'm going to take these lines here and
-let's de-indent them i'll remove the
-self
-and the same thing here so remove the
-cell so we have should buy and should
-sell and then let's also change the name
-so that we know that this is the average
-strategy so this is
-should buy average and we have should
-sell
-average and we can do the same thing for
-the min max trading strategy
-so i'll just take again this function
-definitions
-remove the self
-like so and then we're going to call
-this
-min max instead
-like so so now we have our functions and
-now we need to change the trading ball
-class because no longer has a trading
-strategy but it has a buy function and a
-sell strategy function
-so let's call that to buy strategy
-which is a
-trading
-strategy function and we have the cell
-strategy
-which is also a trading strategy
-function and in the run methods we don't
-do this but we call here the buy
-strategy and here
-we call the
-sell strategy like so and now we can
-create the trading strategy here we can
-delete these lines and we simply provide
-the functions that the trading bot needs
-right here
-so let's say we could
-have the should buy average and
-should sell average like so
-and now let's run this code just to
-verify that this still works so there is
-a problem here function object has no
-attribute should buy and that's of
-course because we don't need to do the
-goal here anymore because this is
-already a function
-so let's remove that as well let's run
-this one more time and now we're getting
-exactly the same but because we're using
-the more functional approach now it's
-the code has become a bit shorter
-because we don't have all these classes
-everywhere another advantage is that in
-the trading bot we can now supply
-different combinations of functions so
-we could have a buy strategy for average
-and we could have a cell strategy which
-is min max and then let me run this one
-more time and well the result is the
-same but you can imagine that we can
-make now any combination that we like
-so
-like so and then let's see what happens
-then and now there is no action needed
-so by using a more functional approach
-here we've also introduced some extra
-flexibility now of course you could also
-do this with the regular strategy
-pattern in a sense that instead of
-having a trading strategy that has both
-a should buy and should sell method we
-could create classes for buying and for
-selling leading to even more classes and
-subclasses by the way so personally i
-really prefer this type of approach
-where we're dealing with simple
-functions that we just pass to the
-training bot
-in fact even the trading bots we could
-turn it into a function because at the
-moment it's a simple it's a single
-method we could actually turn this into
-a simple function that gets a symbol an
-exchange a buy strategy and a cell
-strategy and then just runs the strategy
-and there is no class needed anymore but
-for now i'll leave it like it is it's
-also not a big issue that it's a class
-and we might want to add more methods to
-it in the future one of the issues with
-the functional version of the strategy
-pattern that we use that there is no way
-to pass parameters to these functions
-and that's because trading bot expects
-these functions to have a particular
-type it expects these functions to
-accept a list of prices
-but what if for the average trading site
-you want to pass parameters like the
-window size or for the min max trading
-strategy we want to set the minimum and
-maximum price currently we can't do that
-in the original version of the code that
-used classes you could pass these
-parameters to the class initializer and
-then store them as states with functions
-there are other ways to fix this one of
-them is by using closures so let's see
-how that works what we're going to do is
-create a function that returns a trading
-strategy function
-and then we can pass parameters to that
-particular function and then it can pass
-those parameters to the closure that it
-creates and then it returns a function
-that we can still use in the trading
-strategy so for example here we have
-should buy average and we might want to
-change the window size here currently
-it's three we might want to make it
-bigger or smaller so what we can do
-instead is use a closure let's call that
-should buy
-average
-closure
-and that's going to get a
-window size which is an integer and what
-this is going to return is a
-trading strategy function and then we
-define the should buy average function
-inside of this closure function and
-here the -3
-we're setting that to the
-window size like so and now what we're
-going to do is return
-should buy
-average so that's our closure function
-and because we're passing the window
-size as a parameter here we can use it
-in should by average that's the whole
-idea of the closure but the function
-that we return is still a function that
-only gets a list of prices
-this is the closure mechanism what you
-can now do in the main function is that
-instead of passing this function
-directly we can pass a should by average
-closure and then we actually pass it the
-window size so for example i could now
-pass the window size of four and this is
-going to return us the average function
-that takes a window size of 4. and now
-let's run this and well apparently we
-still need to buy more bitcoin so this
-is what a closure does and you can
-basically use the closure for any of
-these other functions as well so for
-example for should sell min max it's
-probably useful if we have a closure
-that allows to define what the price is
-so let's create that should
-cell
-min max closure
-so this is going to get a
-max price
-which is an int
-and this is also going to return a
-trading strategy function and then this
-function here is going to be a part of
-the closure and instead of having this
-fixed price i'm going to replace it by
-the
-max price and then it's going to return
-the function as a result
-like so and this line doesn't make any
-sense anymore so now we have this should
-sell min max closure and then i can go
-here
-should sell min max closure and i
-provide a price let's say i only want to
-sell
-if the price is
-above 35 000 like so and i need to put
-two additional zeros this by the way
-nice way in python to
-make bigger numbers more clear in the
-interface actually does nothing it
-doesn't change the value of this number
-but it makes it a bit clearer how many
-zeros there are and what it exactly
-means so that's why i'm using that here
-so should buy and should sell now use a
-closure so we can set some parameters
-here and trading bots
-still doesn't know anything about that
-because it simply gets a trading
-strategy function from it so let's run
-this and now we're still buying
-10
-cryptocurrencies if i change the window
-here to something else
-let's see
-now i'm not buying anything because the
-window has changed and apparently we're
-just on the limit of whether we should
-buy or not use enclosure solved the
-problem of not being able to pass
-parameters to these functions but it's a
-bit for both and it's not very flexible
-instead a more elegant way of solving
-this is by using partial functions a
-partial application or partial function
-application fixes a number of arguments
-in the original function and returns a
-new function without those arguments
-this is different from querying by the
-way which is not a term you might have
-heard from the functional programming
-domain currying means that you transform
-a function that takes multiple arguments
-into a sequence of functions that each
-take only a single argument and because
-you can query any function this is very
-useful in theoretical computer science
-for example where you want to study
-functions with multiple arguments and
-then you can transform them into a
-simple theoretical model of functions
-taking only a single argument
-partial functions are way more practical
-approach and in this case they can
-really help to simplify the code and
-make it way more flexible so let's see
-how that works so let's first import
-partial from functools
-because that's what we're going to use
-to make these functions a bit more
-flexible and what i'm going to do now is
-really simplify these functions right
-here so instead of making this a closure
-what i'll do is simply add the parameter
-to the should by average function
-instead and then i'll delete this line
-i'll delete this line and this will go
-into d and then so now i have a simple
-should buy average function and for
-cell i can also add the window size
-in exactly the same way
-so now should sell also expects a window
-size for should buy i'm doing exactly
-the same thing so here i'm going to
-provide a minimum price
-like so
-and
-should sell is exactly the same so i'm
-also going to add here a
-maximum price which is an int and then
-i'll delete the closure here
-and i'll de-indent this and now we have
-our four functions back and these
-functions are still very simple they
-just have a bunch of extra parameters
-this does mean that now we can't
-directly use them in the trading agent
-because this expects a should buy and
-should sell method that follow exactly
-the trading strategy function type which
-expects a list of prices and returns a
-boolean and now these functions they
-don't adhere to this type anymore
-because well they expect other things as
-well such as this window size or the
-minimum and maximum price i could get
-away with it in this particular example
-by supplying default values here
-and then you could still use them
-directly but then it would still be
-impossible to basically set it to a
-different value than the default value
-and we actually want to change these
-things so
-we need a better solution and partial
-can really help here so what we can do
-with partial is
-create partially applied versions of
-these particular functions so what you
-can do is and that's actually really
-neat we can create a
-buy strategy
-which is then a partial application so
-i'm using parcel here of
-the function which is let's say
-should buy average and we're going to
-supply the arguments so we're going to
-supply a window size
-of four and now what's interesting is
-that we get back from partial another
-function
-like the closure but with the window
-size of four so now we can pass to the
-trading bots the by strategy function
-like so and as you see the type arrows
-are gone because well by strategy is
-actually a function that returns a
-boolean and that takes a list of prices
-and similarly we can create a cell
-strategy
-which is also partial application of
-let's say should sell average
-or let's do the uh the min max actually
-and then we're going to supply a
-max price of let's say
-35
-000
-dollars like so
-and now what i can do here
-is supply the cell strategy and let's
-run this see what happens
-so we get some missing parenthesis
-somewhere oh i think this one doesn't
-need to be there let's run that again
-and now we're back at a working state of
-the code again so this is really
-powerful because now it means that we
-have flexibility in the way that we
-define our functions we can supply these
-extra arguments here max minimum price
-window sizes etc but because of partial
-we can transform these functions into
-new functions with partially applied
-arguments so this is actually
-the should by average function except it
-already gets a window size of four we've
-partially applied the function and this
-is really neat because this is way
-shorter than using the closure solution
-that i showed you before and it also
-allows you to create these functions a
-bit more independently of the type that
-something like the trading bot expects
-because
-you can simply use parcel application to
-resolve the rest of the arguments and
-then the trading bot doesn't have to
-know anything about that so i think
-there's a really neat way of allowing
-for more flexibility in your code while
-still keeping things relatively simple
-so partial function application i love
-it i think you should also experiment
-with it a bit more in your code if you
-have used partial functions already let
-me know in the comments what your
-thoughts are about this so anyway i hope
-you enjoyed this video and that it gave
-you some ideas of how you could use
-partial function application to your
-advantage give the video a like if you
-enjoyed it consider subscribing to my
-channel if you want to learn more about
-software design and development
-thanks for watching take care
-and see you soon
+Look around you. Where are you? Where is this 
+place you are occupying? Somewhere in a room,  
+maybe in a city on a continent on a planet 
+orbiting a star in a galaxy among billions.  
+But… where is all of that? While 
+this may feel like a daft question,  
+it turns out that the concept of an absolute 
+position is something humans made up.
+In a nutshell, the universe is a big 
+bag of space that has things in it.  
+If someone removed all these things, the 
+stars and planets and black holes and dust,  
+there would just be empty space left. 
+In empty space, the concept of having  
+a position loses all meaning. Empty 
+space is uniform, the same everywhere.
+The space we occupy is not like a stage under 
+our feet. We can't mark specific points,  
+or staple something to spacetime as an 
+anchor. Without things there is no position.  
+We are really ever only at a position 
+in relation to something else.  
+Which also means that things we take for granted, 
+like up and down are actually relative too.
+Ok, let us fill the universe up with things again  
+and try to find out where you are, 
+right now. Relative to everything else.
+Let us start this video at a familiar place 
+and then get increasingly weird. From your  
+perspective the world is seemingly flat and you 
+can move in 3 dimensions. It's what physicists  
+call a 'frame of reference' - the perspective 
+you have of the universe and how you see things  
+moving around you. Where your up and down 
+is. Your frame of reference is correct.  
+For you – but not for the rest of the universe.
+Around 5 kilometers from you, where the horizon 
+begins, the ground noticeably curves away from  
+you. If you could see through the ground, 
+you’d see people from below or sideways.  
+But they don't fall 'down' off the planet 
+because gravity doesn't actually pull them down.  
+'Down' is an illusion of your reference frame. To 
+earth's reference frame, gravity just pulls in.
+But for humans there is an up and down because 
+within our frame of reference that just makes  
+sense. Which is also why we think that the planet 
+itself has an up and down, north and south. And  
+we made our maps accordingly. But an observer 
+looking at the solar system might disagree.  
+Our maps make sense to us because we are 
+used to them, not because they are correct.
+Ok. So this is step one – your position 
+on what feels like a flat surface but  
+is actually a sphere. But this sphere is 
+always moving, never staying in one position.  
+Earth is orbiting a star, the sun 
+at the center of the solar system.
+While we usually imagine this as pretty orderly,  
+someone looking at us from the outside 
+would see something pretty messy.  
+To see this more clearly we’ll exaggerate 
+all these movements, this is not to scale.
+First of all, our orbit really is an ellipse, 
+so we spend half the year sinking a little  
+bit closer to the sun speeding up, and half 
+the year rising up a bit and slowing down.  
+And the ellipsis itself changes 
+its shape every 100,000 years too.
+And in another cycle of 112,000 years, the 
+ellipse itself is drifting – which at least  
+creates a beautiful shape. In the end, we 
+get an orbital path that looks like a wobbly  
+circle with wavy edges. And it gets worse, as 
+the moon now starts to screw things up too.
+As the moon is a pretty massive thing, it pulls on 
+earth. Both objects orbit their common center of  
+gravity, that lies around 4700 km off to the 
+side of Earth’s core. In practice this means  
+that as the moon orbits earth, it is jerking 
+earth around a bit, enough to make it jiggle.
+Ok so you are standing on the 
+surface of a rotating planet,  
+that is jiggling around the sun in an 
+elliptical orbit that changes a bit every year.
+But who's to say the earth is right? From  
+the perspective of the sun the plane 
+of the solar system is arbitrary,  
+it's defined as the plane the earth orbits in 
+because that is convenient for us. In reality  
+the other planets are just a little 
+bit inclined with respect to our plane.  
+From their point of view, we're the 
+ones with a slightly bent orbit.
+But this is not it – far from it! The solar system 
+as a whole is orbiting the center of the milky  
+way galaxy. If we look at the milky way, we can 
+clearly make out a galactic plane in which the  
+solar system orbits the center every 230 million 
+years. But of course it is not that simple.
+First of all, the plane of the solar system 
+is not aligned with the plane of the galaxy.  
+Nothing really is – just like the planets in the 
+solar system orbit the sun on their own planes, so  
+do all the stars orbiting the galactic center. The 
+solar system as a whole is tilted about 60 degrees  
+towards the galactic plane, speeding through 
+space at almost a million kilometers per hour.
+Someone in the center of the galaxy would see 
+the orbits of the planets moving through space  
+in a helix shape, which you can 
+imagine as a corkscrew motion,  
+on the tilted plane of the solar system, 
+relative to the plane of the galaxy.
+This orientation in space means that sometimes the  
+planets are sort of in front of the sun 
+as it orbits around the galactic core.  
+Let us just look at this for a moment 
+– there is a strange and eerie beauty  
+abouthow our planets and the sun move through 
+space. Do you feel a bit dizzy? It gets worse.
+This is still not the whole story because the 
+mass of the galactic disk is constantly pulling on  
+the solar system too. Like a drunk dolphin, we're 
+diving down and shooting up hundreds of lightyears  
+through the galactic plane, ten times every 
+orbit, along arcs thousands of light years long.  
+We haven’t mapped this motion out 
+completely, as it takes the solar  
+system tens of millions of years to go up and 
+back once; and, well, humanity is not that old.
+Let’s look at your relative 
+position again. On a planet,  
+tilted towards the sun, jiggled around by 
+the moon. In a solar system tilted towards  
+the galactic plane, moving forward in a helical 
+shape, diving up and down through the plane.
+Hm. But where is “up” in a galaxy? At this point 
+the frame of reference becomes a bit arbitrary  
+and pointless because of the nature of the 
+universe at this scale. The Milky way is  
+part of a galaxy group that appears to be part of 
+greater structures like the Laniakea Supercluster,  
+which itself is part of the gigantic Pisces–Cetus 
+Supercluster Complex and finally a galactic  
+filament that spans hundreds of millions of 
+lightyears in all directions and orientations.
+Someone looking right at us from that far 
+away will only see the End of Greatness.  
+All stuff appears homogeneous, the same 
+everywhere. Just like with empty space,  
+when everything looks the same, who's to say 
+anyone's view is better than anyone else's?
+We have reached the end of our 
+little exercise in cosmic humility.  
+Let us make the journey backwards again. From 
+the indescribably large, to the really large,  
+to our galactic home, to our galaxy, to the solar 
+system diving up and down through the milky way,  
+to the jiggle of existence. And finally, 
+back to you, right now, watching this video.
+If this is all a bit much, don’t feel bad. 
+The scale of the universe is brain crushing  
+and trying to keep track of how everything is 
+oriented or decide where the best up and down is,  
+is hard. But it doesn't really matter. 
+Because it doesn't change where you are.  
+You're already in the best spot you could possibly 
+be – right here, right now. For all you care  
+nothing can stop you from being right at 
+the center of your own little universe.
+Perspective really is everything. That is true 
+for the universe we all inhabit, but even more  
+so within your personal universe. The way your 
+life will unfold also depends on what you consider  
+possible. Take us at Kurzgesagt: our passion is 
+to spark curiosity for science and make videos for  
+free. But this is not a great business model so we 
+began to create our own lines of science posters,  
+calendars and fun kurzgesagt merch - pieces of 
+Kurzgesagt - that you can take home and touch.
+And we are doing this with Shopify, who 
+also were so kind as to sponsor this  
+video – which delighted us because we have 
+been using their platform for years now.  
+Shopify is an e-commerce platform that 
+allows you to start and grow your business.  
+And by starting a business, we really do mean 
+from scratch: if you want to sell your handmade  
+ceramic mugs out of your bedroom today, you can. 
+But not just that – if you want to scale your  
+one-man show to a sizeable team, then Shopify 
+has the tools to support you on your journey.  
+Now you just have to get started: go to 
+shopify.com/kurzgesagt to get a free 14 day trial.
+If you think that this does not apply to you and 
+your ideas are too small, we want to encourage you  
+to think again: the first video on this channel 
+was a university project and Kurzgesagt itself  
+was a creative outlet. Eventually we grew 
+into a business and the team that is making  
+videos for you today. And all of that just 
+because we wanted to try out something new.
+This is exactly the sort of thing 
+that Shopify is determined to support  
+and you can build your own thing with it. After 
+all, whetheryour idea is still just a dream or  
+might turn into a plan today is also just a matter 
+of perspective. Millions of businesses in over 175  
+countries are currently using Shopify to sell 
+their products and we are one of them. Thanks  
+to them for helping us get here and thanks to 
+all of you for making our channel possible.
