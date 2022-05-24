@@ -68,8 +68,15 @@ def test_generate_wordcloud_allwordstopped(textfile, stopwordsfile) -> None:
         generate_wordcloud(text, stopwords)
 
 
-def test_save_wordcloud(textfile) -> None:
+def test_save_wordcloud(textfile, create_image) -> None:
     text = read_sub_file(textfile)
     wordcloud = generate_wordcloud(text)
-    save_wordcloud(wordcloud)
-    assert os.path.isfile("transcript_wordcloud.png")
+    save_wordcloud(wordcloud, create_image)
+    assert os.path.isfile(create_image)
+
+
+def test_save_wordcloud_not_image(textfile) -> None:
+    text = read_sub_file(textfile)
+    wordcloud = generate_wordcloud(text)
+    with pytest.raises(ValueError):
+        save_wordcloud(wordcloud, "test.txt")

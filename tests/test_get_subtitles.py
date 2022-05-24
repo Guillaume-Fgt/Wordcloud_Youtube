@@ -3,12 +3,18 @@ from wordcloud_youtube.get_subtitles import (
     download_transcript,
     format_transcript_text,
     write_to_text_file,
+    get_video_id,
 )
 from youtube_transcript_api import TranscriptsDisabled
 import pytest
 
 # Pj-h6MEgE7I valid URL
 # S1ZOW6HVLJ0 no subtitles URL
+
+
+def test_get_video_id() -> None:
+    id = get_video_id("https://www.youtube.com/watch?v=Pj-h6MEgE7I")
+    assert id == "Pj-h6MEgE7I"
 
 
 def test_download_transcript_invalid() -> None:

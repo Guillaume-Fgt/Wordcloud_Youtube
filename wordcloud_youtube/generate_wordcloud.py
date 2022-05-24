@@ -2,6 +2,7 @@ import numpy as np
 from PIL import Image
 from wordcloud import STOPWORDS
 from wordcloud import WordCloud
+import re
 
 
 def read_sub_file(path: str) -> str:
@@ -33,15 +34,19 @@ def generate_wordcloud(
     wordcloud = WordCloud(
         stopwords=stopwords,
         max_words=200,
-        background_color=None,
-        mode="RGBA",
-        color_func=lambda *args, **kwargs: (0, 0, 0),
+        color_func=lambda *args, **kwargs: (255, 255, 255),
         mask=mask,
         include_numbers=True,
     ).generate(text)
     return wordcloud
 
 
-def save_wordcloud(wordcloud: WordCloud) -> None:
+def save_wordcloud(wordcloud: WordCloud, filename: str) -> None:
     """save the wordcloud to image file"""
-    wordcloud.to_file("transcript_wordcloud.png")
+    if not (
+        re.search(r"^\w+.jpg", filename) or re.search(r"^\w+.png", filename)
+    ):  # noqa: E501
+        raise ValueError(
+            f"Invalid filename: {filename} must finish with .jpg or .png"
+        )  # noqa: E501
+    wordcloud.to_file(filename)
