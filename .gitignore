@@ -1,9 +1,6 @@
 .coverage
-tests/__pycache__/__init__.cpython-310.pyc
-tests/__pycache__/test_generate_wordcloud.cpython-310-pytest-7.1.2.pyc
-tests/__pycache__/test_get_subtitles.cpython-310-pytest-7.1.2.pyc
-tests/__pycache__/test_wordcloud_youtube.cpython-310-pytest-7.1.2.pyc
-wordcloud_youtube/__pycache__/__init__.cpython-310.pyc
-wordcloud_youtube/__pycache__/generate_wordcloud.cpython-310.pyc
-wordcloud_youtube/__pycache__/get_subtitles.cpython-310.pyc
-wordcloud_youtube/__pycache__/main.cpython-310.pyc
+tests/__pycache__/
+wordcloud_youtube/__pycache__/
+htmlcov/
+.pytest_cache/
+.venv/
