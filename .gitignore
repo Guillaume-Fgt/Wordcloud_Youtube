@@ -4,3 +4,5 @@ wordcloud_youtube/__pycache__/
 htmlcov/
 .pytest_cache/
 .venv/
+transcript_wordcloud.png
+transcript.txt
