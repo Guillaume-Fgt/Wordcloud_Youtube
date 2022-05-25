@@ -1,6 +1,4 @@
-import interface
-import get_subtitles
-import generate_wordcloud
+from wordcloud_youtube import interface, get_subtitles, generate_wordcloud
 
 
 def use_interface(
